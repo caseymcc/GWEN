@@ -9,13 +9,15 @@ solution "GWEN"
 	targetdir ( "../lib/" .. os.get() .. "/" .. _ACTION )
 	libdirs { "../lib/", "../lib/" .. os.get() }
 
+	platforms { "native", "x32", "x64" }
+
 	configurations
 	{
 		"Release",
 		"Debug"
 	}
 
-	if ( _ACTION == "vs2010" or _ACTION=="vs2008" ) then
+	if ( _ACTION == "vs2013" or _ACTION == "vs2012" or _ACTION == "vs2010" or _ACTION=="vs2008" ) then
 		buildoptions { "/MP"  }
 	end
 
