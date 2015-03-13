@@ -72,6 +72,8 @@ namespace Gwen
 				int					m_iVertNum;
 				Vertex				m_Vertices[ MaxVerts ];
 
+				bool m_textureEnabled;
+				GLuint m_currentTexture;
 
 			public:
 

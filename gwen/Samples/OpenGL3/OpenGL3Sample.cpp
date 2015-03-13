@@ -16,7 +16,11 @@
 
 #include "gl/glew.h"
 #include "gl/wglew.h"
+#ifdef _WIN64
+#pragma comment(lib, "glew64.lib")  
+#else
 #pragma comment(lib, "glew32.lib")  
+#endif
 #pragma comment(lib, "opengl32.lib") 
 
 HWND CreateGameWindow( void )
