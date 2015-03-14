@@ -10,7 +10,8 @@
 #include "Gwen/Gwen.h"
 #include "Gwen/BaseRender.h"
 
-#include "GL\glew.h"
+#include "gl/gl.h"
+#include "gl/glext.h"
 
 namespace Gwen
 {
@@ -48,6 +49,8 @@ namespace Gwen
 				Gwen::Color PixelColour( Gwen::Texture* pTexture, unsigned int x, unsigned int y, const Gwen::Color & col_default );
 
 			protected:
+				void *getOpenGlExtension(std::string funcName);
+				void getOpenGlExtensions();
 
 				static const int	MaxVerts = 1024;
 
@@ -89,8 +92,43 @@ namespace Gwen
 				virtual bool EndContext( Gwen::WindowProvider* pWindow );
 
 				void*	m_pContext;
+
+			private:
+
+				PFNGLACTIVETEXTUREPROC glActiveTexture;
+				PFNGLATTACHSHADERPROC glAttachShader;
+				PFNGLBINDBUFFERPROC glBindBuffer;
+				PFNGLBINDVERTEXARRAYPROC glBindVertexArray;
+				PFNGLBUFFERDATAPROC glBufferData;
+				PFNGLCOMPILESHADERPROC glCompileShader;
+				PFNGLCREATEPROGRAMPROC glCreateProgram;
+				PFNGLCREATESHADERPROC glCreateShader;
+				PFNGLDELETEBUFFERSPROC glDeleteBuffers;
+				PFNGLDELETESHADERPROC glDeleteShader;
+				PFNGLDELETEPROGRAMPROC glDeleteProgram;
+				PFNGLDELETEVERTEXARRAYSPROC glDeleteVertexArrays;
+				PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
+				PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
+				PFNGLGENBUFFERSPROC glGenBuffers;
+				PFNGLGENVERTEXARRAYSPROC glGenVertexArrays;
+				PFNGLGETPROGRAMIVPROC glGetProgramiv;
+				PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
+				PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
+				PFNGLGETSHADERIVPROC glGetShaderiv;
+				PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
+				PFNGLLINKPROGRAMPROC glLinkProgram;
+				PFNGLMAPBUFFERPROC glMapBuffer;
+				PFNGLSHADERSOURCEPROC glShaderSource;
+				PFNGLUNIFORM1FPROC glUniform1f;
+				PFNGLUNIFORM1IPROC glUniform1i;
+				PFNGLUNIFORM2FPROC glUniform2f;
+				PFNGLUNMAPBUFFERPROC glUnmapBuffer;
+				PFNGLUSEPROGRAMPROC glUseProgram;
+				PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 		};
 
 	}
+
+
 }
 #endif

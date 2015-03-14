@@ -14,13 +14,10 @@
 #include "Gwen/Renderers/OpenGL3.h"
 #endif
 
-#include "gl/glew.h"
-#include "gl/wglew.h"
-#ifdef _WIN64
-#pragma comment(lib, "glew64.lib")  
-#else
-#pragma comment(lib, "glew32.lib")  
-#endif
+
+#include "gl/glext.h"
+#include "gl/wglext.h"
+
 #pragma comment(lib, "opengl32.lib") 
 
 HWND CreateGameWindow( void )
@@ -81,12 +78,6 @@ HGLRC CreateOpenGLDeviceContext()
 	HGLRC OpenGLContext = wglCreateContext(GetDC(g_pHWND));
 	wglMakeCurrent(GetDC(g_pHWND), OpenGLContext);
 	
-	GLenum error = glewInit(); // Enable GLEW  
-	if (error != GLEW_OK) // If GLEW fails  
-	{
-		FatalAppExit(NULL, TEXT("glewInit() failed!"));
-	}
-	
 	int attributes[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, 3, // Set the MAJOR version of OpenGL to 3  
 		WGL_CONTEXT_MINOR_VERSION_ARB, 2, // Set the MINOR version of OpenGL to 2  
@@ -94,7 +85,9 @@ HGLRC CreateOpenGLDeviceContext()
 		0
 	};
 
-	if (wglewIsSupported("WGL_ARB_create_context") == 1)  // If the OpenGL 3.x context creation extension is available
+	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB=(PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
+
+	if(!wglCreateContextAttribsARB)
 	{ 
 		wglDeleteContext(OpenGLContext); // Delete the temporary OpenGL 2.1 context
 		wglMakeCurrent(NULL, NULL); // Remove the temporary context from being active  

@@ -7,7 +7,6 @@
 
 #include <math.h>
 
-#include "GL/glew.h"
 #include "FreeImage/FreeImage.h"
 
 
@@ -57,6 +56,8 @@ namespace Gwen
 		{
 			windowWidth = _windowWidth;
 			windowHeight =_windowHeight;
+
+			getOpenGlExtensions();
 
 			//Generate VertexArrayObject
 			glGenVertexArrays(1, &VAO);
@@ -222,7 +223,7 @@ namespace Gwen
 				Flush();
 			}
 
-			int index=vertexBufferData.size();
+			size_t index=vertexBufferData.size();
 			vertexBufferData.resize(vertexBufferData.size()+9);
 			
 			//Position
@@ -453,6 +454,7 @@ namespace Gwen
 			}
 
 			m_pContext = ( void* ) hRC;
+
 			return true;
 #endif
 			return false;
@@ -479,6 +481,57 @@ namespace Gwen
 			return true;
 #endif
 			return false;
+		}
+
+		void *OpenGL3::getOpenGlExtension(std::string funcName)
+		{
+			void *funcPtr=NULL;
+#ifdef _WIN32
+			funcPtr=(void *)wglGetProcAddress(funcName.c_str());
+
+			if((funcPtr == 0) || (funcPtr == (void *)0x1) || (funcPtr == (void *)0x2) || (funcPtr == (void *)0x3) || (funcPtr == (void *)-1))
+			{
+				return NULL;
+				//		HMODULE module=LoadLibraryA("opengl32.dll");
+				//		funcPtr=(void *)GetProcAddress(module, name);
+			}
+#else
+#endif
+			return funcPtr;
+		}
+
+		void OpenGL3::getOpenGlExtensions()
+		{
+			glActiveTexture=(PFNGLACTIVETEXTUREPROC)getOpenGlExtension("glActiveTexture");
+			glAttachShader=(PFNGLATTACHSHADERPROC)getOpenGlExtension("glAttachShader");
+			glBindBuffer=(PFNGLBINDBUFFERPROC)getOpenGlExtension("glBindBuffer");
+			glBindVertexArray=(PFNGLBINDVERTEXARRAYPROC)getOpenGlExtension("glBindVertexArray");
+			glBufferData=(PFNGLBUFFERDATAPROC)getOpenGlExtension("glBufferData");
+			glCompileShader=(PFNGLCOMPILESHADERPROC)getOpenGlExtension("glCompileShader");
+			glCreateProgram=(PFNGLCREATEPROGRAMPROC)getOpenGlExtension("glCreateProgram");
+			glCreateShader=(PFNGLCREATESHADERPROC)getOpenGlExtension("glCreateShader");
+			glDeleteBuffers=(PFNGLDELETEBUFFERSPROC)getOpenGlExtension("glDeleteBuffers");
+			glDeleteShader=(PFNGLDELETESHADERPROC)getOpenGlExtension("glDeleteShader");
+			glDeleteProgram=(PFNGLDELETEPROGRAMPROC)getOpenGlExtension("glDeleteProgram");
+			glDeleteVertexArrays=(PFNGLDELETEVERTEXARRAYSPROC)getOpenGlExtension("glDeleteVertexArrays");
+			glDisableVertexAttribArray=(PFNGLDISABLEVERTEXATTRIBARRAYPROC)getOpenGlExtension("glDisableVertexAttribArray");
+			glEnableVertexAttribArray=(PFNGLENABLEVERTEXATTRIBARRAYPROC)getOpenGlExtension("glEnableVertexAttribArray");
+			glGenBuffers=(PFNGLGENBUFFERSPROC)getOpenGlExtension("glGenBuffers");
+			glGenVertexArrays=(PFNGLGENVERTEXARRAYSPROC)getOpenGlExtension("glGenVertexArrays");
+			glGetProgramiv=(PFNGLGETPROGRAMIVPROC)getOpenGlExtension("glGetProgramiv");
+			glGetProgramInfoLog=(PFNGLGETPROGRAMINFOLOGPROC)getOpenGlExtension("glGetProgramInfoLog");
+			glGetShaderInfoLog=(PFNGLGETSHADERINFOLOGPROC)getOpenGlExtension("glGetShaderInfoLog");
+			glGetShaderiv=(PFNGLGETSHADERIVPROC)getOpenGlExtension("glGetShaderiv");
+			glGetUniformLocation=(PFNGLGETUNIFORMLOCATIONPROC)getOpenGlExtension("glGetUniformLocation");
+			glLinkProgram=(PFNGLLINKPROGRAMPROC)getOpenGlExtension("glLinkProgram");
+			glMapBuffer=(PFNGLMAPBUFFERPROC)getOpenGlExtension("glMapBuffer");
+			glShaderSource=(PFNGLSHADERSOURCEPROC)getOpenGlExtension("glShaderSource");
+			glUniform1f=(PFNGLUNIFORM1FPROC)getOpenGlExtension("glUniform1f");
+			glUniform2f=(PFNGLUNIFORM2FPROC)getOpenGlExtension("glUniform2f");
+			glUniform1i=(PFNGLUNIFORM1IPROC)getOpenGlExtension("glUniform1i");
+			glUnmapBuffer=(PFNGLUNMAPBUFFERPROC)getOpenGlExtension("glUnmapBuffer");
+			glUseProgram=(PFNGLUSEPROGRAMPROC)getOpenGlExtension("glUseProgram");
+			glVertexAttribPointer=(PFNGLVERTEXATTRIBPOINTERPROC)getOpenGlExtension("glVertexAttribPointer");
 		}
 
 		bool OpenGL3::ResizedContext( Gwen::WindowProvider* pWindow, int w, int h )
